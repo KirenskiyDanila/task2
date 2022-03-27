@@ -31,6 +31,7 @@
         // разбираем каждую строку по отдельности
         foreach ($lines as $line) {
             $pos = strpos($line, "> ");
+            // проверяем тип
             $type = $line[$pos + 2];
             $strAndParams = explode("> ", $line);
             $str = str_replace("<", "", $strAndParams[0]);
@@ -39,6 +40,7 @@
                     $params = explode(" ", $strAndParams[1]);
                     $n = $params[1];
                     $m = $params[2];
+                    // проверяем усволия типа S
                     if (strlen($str) >= $n && strlen($str) <= $m) {
                         $result = "OK";
                     }
@@ -51,6 +53,7 @@
                     $params = explode(" ", $strAndParams[1]);
                     $n = $params[1];
                     $m = $params[2];
+                    // проверяем условия типа N и целочисленность
                     if ($str >= $n && $str <= $m && (preg_match("/^[-]?[0-9]+$/", $str) == 1)) {
                         $result = "OK";
                     }
@@ -61,6 +64,7 @@
 
                     break;
                 case "P":
+                    // регулярное выражение для номера телефона
                     if (preg_match("/^[+]7 [(][0-9]{3}[)] [0-9]{3}-[0-9]{2}-[0-9]{2}$/", $str) == 1) {
                         $result = "OK";
                     }
@@ -72,13 +76,14 @@
                 case "D":
                     $dateAndTime = explode(" ", $str);
                     $date = $dateAndTime[0];
-
+                   
+                    // значение d-m-y в отдельные переменные
                     $day = explode(".", $date)[0];
                     $month = explode(".", $date)[1];
                     $year = explode(".", $date)[2];
-
+                    // проверяем существование даты
                     $isDateValid = checkdate($month, $day, $year);
-
+                    // год должен быть 4-х символьным
                     if (strlen($year) != 4) {
                         $isDateValid = false;
                     }
@@ -102,7 +107,7 @@
                     else {
                         $isMinutesValid = false;
                     }
-
+                    // если все условия соблюдаются
                     if ($isDateValid && $isHoursValid && $isMinutesValid) {
                         $result = "OK";
                     }
@@ -112,6 +117,7 @@
                     $fileResult = $fileResult . $result . "<br>";
                     break;
                 case "E":
+                    // регулярное выражение для электронной почты
                     if (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9_]{3,30}@[a-zA-Z]{2,20}[.][a-z]{2,10}$/", $str) == 1) {
                         $result = "OK";
                     }
